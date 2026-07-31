@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title id="pt">Nick Hauss — Links</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@200;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EDE9E3;--lift:#F7F4EF;--ink:#1B1A16;--soft:#57544A;--line:#CFC7B8;--pine:#2C4438;
+--util:"Archivo","Helvetica Neue",Arial,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--util);font-size:16px;-webkit-font-smoothing:antialiased;
+min-height:100svh;display:flex;align-items:center;justify-content:center;padding:44px 20px}
+a{color:inherit;text-decoration:none}
+.wrap{width:100%;max-width:440px}
+.top{text-align:center;margin-bottom:34px}
+.avatar{width:88px;height:88px;border-radius:50%;margin:0 auto 18px;overflow:hidden;background:var(--lift);position:relative}
+.avatar::before{content:attr(data-i);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+font-size:15px;font-weight:500;letter-spacing:.18em;color:var(--line)}
+.avatar img{position:relative;z-index:1;width:100%;height:100%;object-fit:cover}
+.top h1{font-weight:500;font-size:19px;letter-spacing:.15em;text-transform:uppercase;line-height:1.3}
+.top p{font-size:12px;letter-spacing:.05em;color:var(--soft);margin-top:9px;line-height:1.6}
+.grp{margin-top:30px}
+.grp h2{font-size:10px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:var(--pine);
+padding-bottom:11px;border-bottom:1px solid var(--line);margin-bottom:12px}
+.grp.muted h2{color:var(--soft)}
+.lnk{display:flex;align-items:center;justify-content:space-between;gap:14px;
+padding:17px 18px;margin-bottom:9px;background:var(--lift);border:1px solid transparent;
+transition:border-color .25s ease,transform .25s ease,background .25s ease}
+.lnk:hover{border-color:var(--ink);transform:translateY(-2px)}
+.lnk:focus-visible{outline:2px solid var(--pine);outline-offset:3px}
+.lnk b{font-weight:500;font-size:13px;letter-spacing:.11em;text-transform:uppercase;line-height:1.4}
+.lnk s{display:block;text-decoration:none;font-weight:400;font-size:11px;letter-spacing:.02em;
+text-transform:none;color:var(--soft);margin-top:4px}
+.lnk em{font-style:normal;font-size:15px;color:var(--soft);flex:none}
+.lnk.hero{background:var(--ink);color:var(--lift)}
+.lnk.hero s,.lnk.hero em{color:rgba(247,244,239,.6)}
+.lnk.hero:hover{border-color:var(--ink);background:#000}
+.foot{text-align:center;margin-top:34px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--soft)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ================= MODIFICA SOLO QUI SOTTO ================= -->
+<script>
+const LINKS = {
+
+  // ---- TESTA DELLA PAGINA ----
+  pageTitle: "Nick Hauss — Links",   // titolo della scheda del browser
+  avatar:    "images/avatar.jpg",    // foto tonda, quadrata
+  initials:  "NH",                   // compare finche' la foto non c'e'
+  name:      "Nick Hauss",
+  bio:       "International model · Riccione, Italy",
+  arrow:     "\u2192",                  // freccia a destra di ogni bottone
+
+  // ---- I BOTTONI ----
+  // Per aggiungerne uno: copia una riga { ... }, incollala sotto, cambiala.
+  // hero:true  = bottone nero, uno solo per pagina.
+  // muted:true = titolo del gruppo in grigio invece che in verde.
+  // Per togliere un gruppo intero, cancella tutto il blocco { title ... ] },
+  groups: [
+    {
+      title: "Model",
+      items: [
+        { label:"Portfolio", sub:"Book, campagne, reel", url:"https://nickhauss.com", hero:true },
+        { label:"Instagram", sub:"@nicola_hauss",        url:"https://instagram.com/nicola_hauss" },
+        { label:"Booking",   sub:"nick@nickhauss.com",   url:"mailto:nick@nickhauss.com" }
+      ]
+    },
+    {
+      title: "Altro",
+      muted: true,
+      items: [
+        { label:"YBS", sub:"Consulenza wellness", url:"https://esempio.com" }
+      ]
+    }
+  ],
+
+  footer: "nickhauss.com"
+};
+</script>
+<!-- ================= FINE PARTE MODIFICABILE ================= -->
+
+<div class="wrap" id="app"></div>
+
+<script>
+(function(){
+  var L=LINKS;
+  var e=function(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")};
+  document.getElementById('pt').textContent=L.pageTitle;
+  var h='<div class="top"><div class="avatar" data-i="'+e(L.initials)+'"><img src="'+e(L.avatar)+'" alt="'+e(L.name)+'" id="av"></div>'
+       +'<h1>'+e(L.name)+'</h1><p>'+e(L.bio)+'</p></div>';
+
+  h+= L.groups.map(function(g){
+    return '<div class="grp'+(g.muted?' muted':'')+'"><h2>'+e(g.title)+'</h2>'
+      + g.items.map(function(i){
+          var ext=/^https?:/.test(i.url)?' target="_blank" rel="noopener"':'';
+          return '<a class="lnk'+(i.hero?' hero':'')+'" href="'+e(i.url)+'"'+ext+'>'
+            +'<b>'+e(i.label)+(i.sub?'<s>'+e(i.sub)+'</s>':'')+'</b><em>'+e(L.arrow)+'</em></a>';
+        }).join('')
+      +'</div>';
+  }).join('');
+
+  h+='<div class="foot">'+e(L.footer)+'</div>';
+  document.getElementById('app').innerHTML=h;
+  var av=document.getElementById('av');
+  if(av) av.addEventListener('error',function(){av.remove()});
+})();
+</script>
+</body>
+</html>
