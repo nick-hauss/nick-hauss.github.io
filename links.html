@@ -39,6 +39,11 @@ text-transform:none;color:var(--soft);margin-top:4px}
 .lnk.hero{background:var(--ink);color:var(--lift)}
 .lnk.hero s,.lnk.hero em{color:rgba(247,244,239,.6)}
 .lnk.hero:hover{border-color:var(--ink);background:#000}
+.lang{position:fixed;top:16px;right:18px;display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.16em;font-weight:500;color:var(--soft)}
+.lang button{background:none;border:0;cursor:pointer;color:inherit;font-family:var(--util);font-size:11px;letter-spacing:.16em;font-weight:500;padding:6px 2px;min-height:32px;opacity:.5;transition:opacity .3s ease}
+.lang button.on{opacity:1;color:var(--ink);text-decoration:underline;text-underline-offset:5px}
+.lang button:focus-visible{outline:1px solid var(--ink);outline-offset:3px}
+.lang i{font-style:normal;opacity:.4}
 .foot{text-align:center;margin-top:34px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--soft)}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -49,33 +54,39 @@ text-transform:none;color:var(--soft);margin-top:4px}
 <script>
 const LINKS = {
 
-  // ---- TESTA DELLA PAGINA ----
-  pageTitle: "Nick Hauss — Links",   // titolo della scheda del browser
-  avatar:    "images/hero.jpg",    // foto tonda: meglio un ritaglio quadrato
-  initials:  "NH",                   // compare finche' la foto non c'e'
+  pageTitle: "Nick Hauss — Links",
+  avatar:    "images/hero.jpg",
+  initials:  "NH",
   name:      "Nick Hauss",
-  bio:       "Modello e imprenditore · Riccione, Italia",
-  arrow:     "\u2192",                  // freccia a destra di ogni bottone
+  bio: {
+    en: "Model and wellness entrepreneur · Riccione, Italy",
+    it: "Modello e imprenditore nel wellness · Riccione, Italia",
+    es: "Modelo y emprendedor en wellness · Riccione, Italia"
+  },
+  arrow: "\u2192",
 
-  // ---- I BOTTONI ----
-  // Per aggiungerne uno: copia una riga { ... }, incollala sotto, cambiala.
-  // hero:true  = bottone nero, uno solo per pagina.
-  // muted:true = titolo del gruppo in grigio invece che in verde.
-  // Per togliere un gruppo intero, cancella tutto il blocco { title ... ] },
   groups: [
     {
-      title: "Model",
+      title: { en:"Model", it:"Model", es:"Model" },
       items: [
-        { label:"Portfolio", sub:"Book, campagne, video",  url:"https://nickhauss.com", hero:true },
-        { label:"Instagram", sub:"@nicola_hauss",        url:"https://instagram.com/nicola_hauss" },
-        { label:"Booking",   sub:"nick@nickhauss.com",   url:"mailto:nick@nickhauss.com" }
+        { label:{en:"Portfolio", it:"Portfolio", es:"Portfolio"},
+          sub:{en:"Book, campaigns, video", it:"Book, campagne, video", es:"Book, campañas, vídeo"},
+          url:"https://nickhauss.com", hero:true },
+        { label:{en:"Instagram", it:"Instagram", es:"Instagram"},
+          sub:{en:"@nicola_hauss", it:"@nicola_hauss", es:"@nicola_hauss"},
+          url:"https://instagram.com/nicola_hauss" },
+        { label:{en:"Booking", it:"Booking", es:"Contratación"},
+          sub:{en:"nick@nickhauss.com", it:"nick@nickhauss.com", es:"nick@nickhauss.com"},
+          url:"mailto:nick@nickhauss.com" }
       ]
     },
     {
-      title: "Altro",
+      title: { en:"Wellness", it:"Wellness", es:"Wellness" },
       muted: true,
       items: [
-        { label:"YBS",  sub:"Your Best Self — wellness", url:"https://www.yourbestself.pro" }
+        { label:{en:"Your Best Self", it:"Your Best Self", es:"Your Best Self"},
+          sub:{en:"Getting people to their best version", it:"Portare le persone alla loro versione migliore", es:"Llevar a las personas a su mejor versión"},
+          url:"https://www.yourbestself.pro" }
       ]
     }
   ],
@@ -85,30 +96,47 @@ const LINKS = {
 </script>
 <!-- ================= FINE PARTE MODIFICABILE ================= -->
 
+<div class="lang" role="group" aria-label="Language">
+  <button type="button" id="btn-en" class="on">EN</button><i>/</i><button type="button" id="btn-it">IT</button><i>/</i><button type="button" id="btn-es">ES</button>
+</div>
 <div class="wrap" id="app"></div>
 
 <script>
 (function(){
-  var L=LINKS;
-  var e=function(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")};
+  var L=LINKS, lang='en';
+  var e=function(x){return String(x==null?"":x).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")};
+  var d=function(o){return o&&typeof o==='object'?' data-en="'+e(o.en)+'" data-it="'+e(o.it)+'" data-es="'+e(o.es||o.en)+'"':''};
+  var v=function(o){return o&&typeof o==='object'?e(o.en):e(o)};
+
   document.getElementById('pt').textContent=L.pageTitle;
   var h='<div class="top"><div class="avatar" data-i="'+e(L.initials)+'"><img src="'+e(L.avatar)+'" alt="'+e(L.name)+'" id="av"></div>'
-       +'<h1>'+e(L.name)+'</h1><p>'+e(L.bio)+'</p></div>';
+       +'<h1>'+e(L.name)+'</h1><p'+d(L.bio)+'>'+v(L.bio)+'</p></div>';
 
   h+= L.groups.map(function(g){
-    return '<div class="grp'+(g.muted?' muted':'')+'"><h2>'+e(g.title)+'</h2>'
+    return '<div class="grp'+(g.muted?' muted':'')+'"><h2'+d(g.title)+'>'+v(g.title)+'</h2>'
       + g.items.map(function(i){
           var ext=/^https?:/.test(i.url)?' target="_blank" rel="noopener"':'';
           return '<a class="lnk'+(i.hero?' hero':'')+'" href="'+e(i.url)+'"'+ext+'>'
-            +'<b>'+e(i.label)+(i.sub?'<s>'+e(i.sub)+'</s>':'')+'</b><em>'+e(L.arrow)+'</em></a>';
+            +'<b'+d(i.label)+'>'+v(i.label)+'</b>'
+            +(i.sub?'<s'+d(i.sub)+'>'+v(i.sub)+'</s>':'')
+            +'<em>'+e(L.arrow)+'</em></a>';
         }).join('')
       +'</div>';
   }).join('');
-
-  h+='<div class="foot">'+e(L.footer)+'</div>';
+  h+='<div class="foot">'+e(L.footer)+' · <a href="privacy.html" style="color:inherit">Privacy</a></div>';
   document.getElementById('app').innerHTML=h;
-  var av=document.getElementById('av');
-  if(av) av.addEventListener('error',function(){av.remove()});
+
+  var av=document.getElementById('av'); if(av) av.addEventListener('error',function(){av.remove()});
+
+  var BT={en:document.getElementById('btn-en'),it:document.getElementById('btn-it'),es:document.getElementById('btn-es')};
+  function setLang(l){
+    lang=l; document.documentElement.lang=l;
+    document.querySelectorAll('[data-'+l+']').forEach(function(n){n.textContent=n.getAttribute('data-'+l)});
+    Object.keys(BT).forEach(function(k){ if(BT[k]) BT[k].classList.toggle('on', k===l) });
+  }
+  Object.keys(BT).forEach(function(k){ if(BT[k]) BT[k].addEventListener('click',function(){setLang(k)}) });
+  var n=(navigator.language||'').toLowerCase();
+  if(n.indexOf('it')===0) setLang('it'); else if(n.indexOf('es')===0) setLang('es');
 })();
 </script>
 </body>
